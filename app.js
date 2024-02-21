@@ -4,7 +4,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require("cors");
-const sequelize = require("./database/connexion");
+const models = require('./models');
 
 const app = express();
 const corsOptions = {
@@ -19,8 +19,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //! sync the database (force : true) to drop the table & re-create it
-// sequelize.sync({force:true}).then(() => {
-// sequelize.sync().then(() => {
+// models.sequelize.sync({force:true}).then(() => {
+// models.sequelize.sync().then(() => {
 //   initial();
 // });
 
@@ -30,18 +30,16 @@ app.get("/", (req, res) => {
 });
 
 //! création des roles dans la BDD
-// const models = require('./models');
-// const Role = models.role;
 // function initial() {
-//   Role.create({
+//   models.role.create({
 //     id: 1,
 //     nom: "utilisateur"
 //   });
-//   Role.create({
+//   models.role.create({
 //     id: 2,
 //     nom: "personne"
 //   });
-//   Role.create({
+//   models.role.create({
 //     id: 3,
 //     nom: "admin"
 //   });
