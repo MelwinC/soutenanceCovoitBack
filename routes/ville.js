@@ -13,5 +13,5 @@ module.exports = (app) => {
     //! route pour insérer une ville accès: admin
     app.post("/insertVille",
         [authJwt.verifyToken, authJwt.isAdmin],
-        villeController.add);
+        villeController.insert);
 };
