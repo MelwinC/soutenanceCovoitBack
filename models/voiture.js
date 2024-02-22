@@ -1,4 +1,6 @@
-module.exports = (sequelize, DataTypes) => {
+const DataTypes = require('sequelize').DataTypes;
+
+module.exports = (sequelize) => {
     const Voiture = sequelize.define('voiture', {
         id: {
             type: DataTypes.INTEGER,
@@ -8,6 +10,11 @@ module.exports = (sequelize, DataTypes) => {
         modele: DataTypes.STRING,
         place: DataTypes.INTEGER,
         immatriculation: DataTypes.STRING
+    }, {
+        indexes: [{
+            unique: true,
+            fields: ['id_personne']
+        }]
     });
 
     Voiture.associate = models => {

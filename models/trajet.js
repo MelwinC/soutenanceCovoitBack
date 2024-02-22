@@ -1,4 +1,6 @@
-module.exports = (sequelize, DataTypes) => {
+const DataTypes = require('sequelize').DataTypes;
+
+module.exports = (sequelize) => {
     const Trajet = sequelize.define('trajet', {
         id: {
             type: DataTypes.INTEGER,

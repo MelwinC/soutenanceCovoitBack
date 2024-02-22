@@ -1,4 +1,6 @@
-module.exports = (sequelize, DataTypes) => {
+const DataTypes = require('sequelize').DataTypes;
+
+module.exports = (sequelize) => {
     const Compte = sequelize.define('compte', {
         id: {
             type: DataTypes.INTEGER,
@@ -13,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     Compte.associate = models => {
-        Compte.belongsToMany(models.role, { through: 'posseder', foreignKey: 'id_compte' });
+        Compte.belongsToMany(models.role, { through: 'posseder', foreignKey: 'id_compte', otherKey: 'id_role'});
         Compte.hasOne(models.personne, { foreignKey: 'id_compte' });
     };
 
