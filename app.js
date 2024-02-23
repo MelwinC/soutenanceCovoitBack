@@ -16,20 +16,16 @@ app.use(cors(corsOptions)).use(logger('dev')).use(express.json()).use(express.ur
 
 //! sync the database (force : true) to drop the table & re-create it
 // models.sequelize.sync({force:true}).then(() => {
-//   initializeData();
+//   initializeData().then(() => {
+//     console.log("data has been initialized")
+//   });
 // });
-
-//! simple route
-app.get("/", (req, res) => {
-  res.json({ message: "Bienvenue à l'application JWT AUTH EXPRESS MYSQL." });
-});
-
-//! création des roles dans la BDD
 
 require('./routes/auth')(app);
 require('./routes/testRoles')(app);
 require('./routes/ville')(app);
 require('./routes/marque')(app);
+require('./routes/personne')(app);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -43,7 +39,7 @@ app.use((err, req, res, next) => {
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
-  res.status(err.status || 500);
+  res.status(err.status || 500).send({ message: "Server error" });
 });
 
 module.exports = app;
