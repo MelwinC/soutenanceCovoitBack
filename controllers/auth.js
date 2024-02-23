@@ -4,15 +4,16 @@ const bcrypt = require("bcryptjs");
 const Compte = models.compte;
 const Role = models.role;
 const Op = models.Sequelize.Op;
+require('dotenv').config();
 
 exports.register = (req, res) => {
     if(!req.body.login || !req.body.password){
-        res.status(400).send({ message: "Erreur ! Veuillez remplir tous les champs !" });
+        res.status(400).send({ message: "NOK" });
     } else {
         //! créer un compte
         Compte.create({
             login: req.body.login,
-            password: bcrypt.hashSync(req.body.password, 12)
+            password: bcrypt.hashSync(req.body.password)
         })
             .then(compte => {
                 if (req.body.roles) {
@@ -25,13 +26,13 @@ exports.register = (req, res) => {
                     })
                         .then(roles => {
                             compte.setRoles(roles).then(() => {
-                                res.send({ message: "Le compte est enregistré !" });
+                                res.send({ message: "OK" });
                             });
                         });
                 } else {
                     //! compte role = 1
                     compte.setRoles([1]).then(() => {
-                        res.send({ message: "Le compte est enregistré !" });
+                        res.send({ message: "OK" });
                     });
                 }
             })
@@ -44,7 +45,7 @@ exports.register = (req, res) => {
 
 exports.login = (req, res) => {
     if(!req.body.login || !req.body.password){
-        res.status(400).send({ message: "Erreur ! Veuillez remplir tous les champs !" });
+        res.status(400).send({ message: "NOK" });
     } else {
         Compte.findOne({
             where: {
@@ -53,7 +54,7 @@ exports.login = (req, res) => {
         })
             .then(compte => {
                 if (!compte) {
-                    return res.status(404).send({ message: "Utilisateur non trouvé!" });
+                    return res.status(404).send({ message: "NOK" });
                 }
 
                 const passwordIsValid = bcrypt.compareSync(
@@ -64,7 +65,7 @@ exports.login = (req, res) => {
                 if (!passwordIsValid) {
                     return res.status(401).send({
                         accessToken: null,
-                        message: "Mot de passe invalide!"
+                        message: "NOK"
                     });
                 }
 
