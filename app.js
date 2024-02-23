@@ -15,9 +15,9 @@ const corsOptions = {
 app.use(cors(corsOptions)).use(logger('dev')).use(express.json()).use(express.urlencoded({ extended: false })).use(cookieParser()).use(express.static(path.join(__dirname, 'public')));
 
 //! sync the database (force : true) to drop the table & re-create it
-models.sequelize.sync({force:true}).then(() => {
-  initializeData();
-});
+// models.sequelize.sync({force:true}).then(() => {
+//   initializeData();
+// });
 
 //! simple route
 app.get("/", (req, res) => {
@@ -29,6 +29,7 @@ app.get("/", (req, res) => {
 require('./routes/auth')(app);
 require('./routes/testRoles')(app);
 require('./routes/ville')(app);
+require('./routes/marque')(app);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
