@@ -10,7 +10,6 @@ module.exports = (app) => {
         next();
     });
 
-    //! route pour insérer une marque accès: admin
     app.post("/insertMarque",
         [authJwt.verifyToken, authJwt.isAdmin],
         marqueController.insert);
