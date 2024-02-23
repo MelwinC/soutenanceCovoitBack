@@ -11,21 +11,39 @@ async function initial() {
         ]);
 
         // Créer une ville
-        const ville = await models.ville.create({
+        const ville1 = await models.ville.create({
             ville: "Vannes",
             cp: "56000"
+        });
+
+        // Créer une ville
+        const ville2 = await models.ville.create({
+            ville: "Lorient",
+            cp: "56100"
         });
 
         // Créer un compte admin
         const compteAdmin = await models.compte.create({
             login: "admin",
-            password: bcrypt.hashSync("admin")
+            password: bcrypt.hashSync("test")
+        });
+
+        // Créer un compte sans personne associee
+        const compteUtilisateur = await models.compte.create({
+            login: "user",
+            password: bcrypt.hashSync("test")
         });
 
         // Créer un compte
-        const compte = await models.compte.create({
-            login: "john",
-            password: bcrypt.hashSync("doe")
+        const comptePers1 = await models.compte.create({
+            login: "bob",
+            password: bcrypt.hashSync("test")
+        });
+
+        // Créer un compte
+        const comptePers2 = await models.compte.create({
+            login: "patrick",
+            password: bcrypt.hashSync("test")
         });
 
         // Créer une personne admin
@@ -35,7 +53,7 @@ async function initial() {
             email: "admin@admin.com",
             tel: "0123456789",
             id_compte: compteAdmin.id,
-            id_ville: ville.id
+            id_ville: ville1.id
         });
 
         // Créer une personne
@@ -44,8 +62,8 @@ async function initial() {
             nom: "Eponge",
             email: "eponge.bob@example.com",
             tel: "0123456789",
-            id_compte: compte.id,
-            id_ville: ville.id
+            id_compte: comptePers1.id,
+            id_ville: ville1.id
         });
 
         // Créer une seconde personne
@@ -54,18 +72,22 @@ async function initial() {
             nom: "Etoile",
             email: "etoile.patrick@example.com",
             tel: "0123456789",
-            id_compte: compte.id,
-            id_ville: ville.id
+            id_compte: comptePers2.id,
+            id_ville: ville2.id
         });
 
         // Ajout des roles à l'admin
         const rolesAdmin = await models.role.findAll({ where: { nom: ['utilisateur', 'personne', 'admin'] } });
         compteAdmin.addRoles(rolesAdmin);
 
+        // Ajout des roles au compte utilisateur
+        const roleUtilisateur = await models.role.findAll({ where: { nom: 'utilisateur' } });
+        compteUtilisateur.addRoles(roleUtilisateur);
+
         // Ajout des roles à la personne
         const roles = await models.role.findAll({ where: { nom: ['utilisateur', 'personne'] } });
-        compte.addRoles(roles);
-        //
+        comptePers1.addRoles(roles);
+        comptePers2.addRoles(roles);
 
         // Créer des marques
         const marquePeugeot = await models.marque.create({ nom: "Peugeot" });
