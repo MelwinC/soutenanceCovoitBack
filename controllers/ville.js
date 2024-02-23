@@ -31,3 +31,24 @@ exports.insert = (req, res) => {
             });
     }
 };
+
+exports.readAll = (req, res) => {
+    Ville.findAll()
+        .then(villes => {
+            if(villes.length === 0){
+                res.status(404).send({ message: "NOK" });
+            } else {
+                const data = villes.map(ville => {
+                    return {
+                        id: ville.id,
+                        ville: ville.ville,
+                        cp: ville.cp
+                    }
+                })
+                res.send({ message: "OK", villes: data });
+            }
+        })
+        .catch(err => {
+            res.status(500).send({ message: err.message });
+        });
+};

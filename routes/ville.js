@@ -10,7 +10,9 @@ module.exports = (app) => {
         next();
     });
 
-    //! route pour insérer une ville accès: admin
+    app.get("/listeVille",
+        [authJwt.verifyToken],
+        villeController.readAll);
     app.post("/insertVille",
         [authJwt.verifyToken, authJwt.isAdmin],
         villeController.insert);
