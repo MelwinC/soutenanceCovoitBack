@@ -26,6 +26,7 @@ require('./routes/testRoles')(app);
 require('./routes/ville')(app);
 require('./routes/marque')(app);
 require('./routes/personne')(app);
+require('./routes/voiture')(app);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
