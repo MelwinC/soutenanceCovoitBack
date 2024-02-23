@@ -12,7 +12,7 @@ exports.register = (req, res) => {
         //! créer un compte
         Compte.create({
             login: req.body.login,
-            password: bcrypt.hashSync(req.body.password, 8)
+            password: bcrypt.hashSync(req.body.password, 12)
         })
             .then(compte => {
                 if (req.body.roles) {

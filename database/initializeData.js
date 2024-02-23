@@ -19,13 +19,13 @@ async function initial() {
         // Créer un compte admin
         const compteAdmin = await models.compte.create({
             login: "admin",
-            password: bcrypt.hashSync("admin", 8)
+            password: bcrypt.hashSync("admin", 12)
         });
 
         // Créer un compte
         const compte = await models.compte.create({
             login: "john",
-            password: bcrypt.hashSync("doe", 8)
+            password: bcrypt.hashSync("doe", 12)
         });
 
         // Créer une personne admin
