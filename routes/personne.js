@@ -10,6 +10,9 @@ module.exports = (app) => {
         next();
     });
 
+    app.get("/selectPersonne",
+        [authJwt.verifyToken, authJwt.isPersonne],
+        personneController.select);
     app.get("/listePersonne",
         [authJwt.verifyToken, authJwt.isPersonne],
         personneController.readAll);
