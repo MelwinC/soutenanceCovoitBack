@@ -1,15 +1,15 @@
 exports.all = (req, res) => {
-    res.status(200).send("Accessible publiquement.");
+    res.status(200).send({ message: "Accessible publiquement" });
 };
 
 exports.utilisateur = (req, res) => {
-    res.status(200).send("Accessible au role `utilisateur`.");
+    res.status(200).send({ message: "Accessible au role `utilisateur`" });
 };
 
 exports.personne = (req, res) => {
-    res.status(200).send("Accessible au role `personne`.");
+    res.status(200).send({ message: "Accessible au role `personne`" });
 };
 
 exports.admin = (req, res) => {
-    res.status(200).send("Accessible au role `admin`.");
+    res.status(200).send({ message: "Accessible au role `admin`" });
 };
