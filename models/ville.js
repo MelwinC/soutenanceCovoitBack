@@ -2,11 +2,6 @@ const DataTypes = require('sequelize').DataTypes;
 
 module.exports = (sequelize) => {
     const Ville = sequelize.define('ville', {
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true
-        },
         ville: DataTypes.STRING,
         cp: DataTypes.STRING
     });

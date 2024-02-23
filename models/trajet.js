@@ -2,11 +2,6 @@ const DataTypes = require('sequelize').DataTypes;
 
 module.exports = (sequelize) => {
     const Trajet = sequelize.define('trajet', {
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true
-        },
         kms: DataTypes.STRING,
         dateT: DataTypes.DATE,
         place_proposees: DataTypes.STRING

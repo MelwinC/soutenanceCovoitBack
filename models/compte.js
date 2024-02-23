@@ -2,11 +2,6 @@ const DataTypes = require('sequelize').DataTypes;
 
 module.exports = (sequelize) => {
     const Compte = sequelize.define('compte', {
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true
-        },
         login: {
             type: DataTypes.STRING,
             unique: true
