@@ -1,4 +1,4 @@
-const { verifyRegister } = require("../middlewares");
+const { verifyRegister, authJwt } = require("../middlewares");
 const controller = require("../controllers/auth");
 
 module.exports = (app) => {
@@ -11,11 +11,17 @@ module.exports = (app) => {
     });
     app.post(
         "/register",
-        [
-            verifyRegister.checkDuplicateLogin,
-            verifyRegister.checkRolesExisted
-        ],
+        [verifyRegister.checkDuplicateLogin],
         controller.register
+    );
+    app.post(
+        "/register/admin",
+        [
+            authJwt.verifyToken,
+            authJwt.isAdmin,
+            verifyRegister.checkDuplicateLogin
+        ],
+        controller.registerAdmin
     );
     app.post("/login", controller.login);
 };
