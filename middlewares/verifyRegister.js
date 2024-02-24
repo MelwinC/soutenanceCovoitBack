@@ -23,16 +23,13 @@ checkDuplicateLogin = async (req, res, next) => {
 
 checkDuplicateEmail = async (req, res, next) => {
     try{
-        if(!req.body.email){
-            return res.status(400).send({
-                message: "Veuillez remplir tous les champs !"
-            });
-        }
-        const personne = await Personne.findOne({ where: { email: req.body.email } });
-        if(personne){
-            return res.status(400).send({
-                message: "L'email est déjà attribué !"
-            });
+        if(req.body.email){
+            const personne = await Personne.findOne({ where: { email: req.body.email } });
+            if(personne){
+                return res.status(400).send({
+                    message: "L'email est déjà attribué !"
+                });
+            }
         }
         next();
     } catch (error) {
