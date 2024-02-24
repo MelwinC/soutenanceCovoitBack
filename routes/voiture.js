@@ -13,4 +13,7 @@ module.exports = (app) => {
     app.get("/listeVoiture",
         [authJwt.verifyToken, authJwt.isPersonne],
         voitureController.readAll);
+    app.post("/insertVoiture",
+        [authJwt.verifyToken, authJwt.isPersonne],
+        voitureController.insert);
 };
