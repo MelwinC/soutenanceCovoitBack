@@ -6,33 +6,28 @@ const Personne = models.personne;
 exports.insert = async (req, res) => {
     try {
         if(!req.body.modele || !req.body.place || !req.body.id_marque || req.body.place<=1) {
-            res.status(400).send({message: "NOK"});
-            return;
+            return res.status(400).send({message: "NOK"});
         }
 
         const immatriculation = req.body.immatriculation;
         const immatriculationRegex = /^[A-Z]{2}-[0-9]{3}-[A-Z]{2}$/;
         if (!immatriculation || !immatriculationRegex.test(immatriculation)) {
-            res.status(400).send({ message: "NOK" });
-            return;
+            return res.status(400).send({ message: "NOK" });
         }
 
         const voiture = await Voiture.findOne({ where : { immatriculation } });
         if (voiture) {
-            res.status(404).send({ message: "NOK" });
-            return;
+            return res.status(404).send({ message: "NOK" });
         }
 
         const personne = await Personne.findByPk(req.body.id_personne);
         if (!personne) {
-            res.status(404).send({ message: "NOK" });
-            return;
+            return res.status(404).send({ message: "NOK" });
         }
 
         const marque = await Marque.findByPk(req.body.id_marque)
         if (!marque) {
-            res.status(404).send({ message: "NOK" });
-            return;
+            return res.status(404).send({ message: "NOK" });
         }
 
         await Voiture.create({
@@ -53,8 +48,7 @@ exports.readAll = async (req, res) => {
     try{
         const voitures = await Voiture.findAll();
         if(voitures.length === 0) {
-            res.status(404).send({ message: "NOK" });
-            return;
+            return res.status(404).send({ message: "NOK" });
         }
 
         const data = voitures.map(voiture => {
