@@ -1,4 +1,4 @@
-const { authJwt } = require("../middlewares");
+const { authJwt, verifyRegister } = require("../middlewares");
 const personneController = require("../controllers/personne");
 
 module.exports = (app) => {
@@ -10,6 +10,9 @@ module.exports = (app) => {
         next();
     });
 
+    app.post("/insertPersonne",
+        [authJwt.verifyToken, verifyRegister.checkDuplicateEmail],
+        personneController.insert);
     app.get("/selectPersonne",
         [authJwt.verifyToken, authJwt.isPersonne],
         personneController.select);
