@@ -21,36 +21,64 @@ verifyToken = (req, res, next) => {
     });
 };
 
-isAdmin = (req, res, next) => {
-    Compte.findByPk(req.id_compte).then(compte => {
-        compte.getRoles().then(roles => {
-            for (let i = 0; i < roles.length; i++) {
-                if (roles[i].nom === "admin") {
-                    next();
-                    return;
-                }
-            }
-            res.status(403).send({
-                message: "Le role `admin` est nécessaire!"
+isAdmin = async (req, res, next) => {
+    try {
+        const compte = await Compte.findByPk(req.id_compte);
+        if(!compte){
+            return res.status(404).send({
+                message: "Compte non trouvé !"
             });
+        }
+
+        const roles = await compte.getRoles();
+        if(!roles){
+            return res.status(404).send({
+                message: "Roles non trouvés !"
+            });
+        }
+        for (let i = 0; i < roles.length; i++) {
+            if (roles[i].nom === "admin") {
+                next();
+                return;
+            }
+        }
+
+        res.status(403).send({
+            message: "Le role `admin` est nécessaire!"
         });
-    });
+    } catch (error) {
+        res.status(500).send({ message: "NOK" });
+    }
 };
 
-isPersonne = (req, res, next) => {
-    Compte.findByPk(req.id_compte).then(compte => {
-        compte.getRoles().then(roles => {
-            for (let i = 0; i < roles.length; i++) {
-                if (roles[i].nom === "personne") {
-                    next();
-                    return;
-                }
-            }
-            res.status(403).send({
-                message: "Le role `personne` est nécessaire!"
+isPersonne = async (req, res, next) => {
+    try {
+        const compte = await Compte.findByPk(req.id_compte);
+        if(!compte){
+            return res.status(404).send({
+                message: "Compte non trouvé !"
             });
+        }
+
+        const roles = await compte.getRoles();
+        if(!roles){
+            return res.status(404).send({
+                message: "Roles non trouvés !"
+            });
+        }
+        for (let i = 0; i < roles.length; i++) {
+            if (roles[i].nom === "personne") {
+                next();
+                return;
+            }
+        }
+
+        res.status(403).send({
+            message: "Le role `personne` est nécessaire!"
         });
-    });
+    } catch (error) {
+        res.status(500).send({ message: "NOK" });
+    }
 };
 
 const authJwt = {
