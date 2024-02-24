@@ -6,90 +6,88 @@ const Role = models.role;
 const Op = models.Sequelize.Op;
 require('dotenv').config();
 
-exports.register = async (req, res) => {
-    try{
-        if(!req.body.login || !req.body.password){
-            return res.status(400).send({ message: "NOK" });
-        }
-
-        const role = await Role.findOne( { where: { nom: "utilisateur" }});
-
-        const compte = await Compte.create({
+exports.register = (req, res) => {
+    if(!req.body.login || !req.body.password){
+        res.status(400).send({ message: "NOK" });
+    } else {
+        //! créer un compte
+        Compte.create({
             login: req.body.login,
             password: bcrypt.hashSync(req.body.password)
-        });
-        compte.setRoles(role);
-
-        res.status(201).send({ message: "OK" });
-    } catch (error) {
-        res.status(500).send({ message: "NOK" });
-    }
-};
-
-exports.registerAdmin = async (req, res) => {
-    try{
-        if(!req.body.login || !req.body.password){
-            return res.status(400).send({ message: "NOK" });
-        }
-
-        const roles = ["utilisateur", "personne", "admin"];
-        const rolesDb = await Role.findAll( { where: { nom: { [Op.or]: roles } }});
-
-        const compte = await Compte.create({
-            login: req.body.login,
-            password: bcrypt.hashSync(req.body.password)
-        });
-        compte.setRoles(rolesDb);
-
-        res.status(201).send({ message: "OK" });
-    } catch (error) {
-        res.status(500).send({ message: "NOK" });
-    }
-};
-
-exports.login = async (req, res) => {
-    try {
-        if(!req.body.login || !req.body.password) {
-            console.log("login or password not found")
-            return res.status(400).send({message: "NOK"});
-        }
-
-        const compte = await Compte.findOne({where: { login: req.body.login }});
-        if (!compte) {
-            console.log("compte not found")
-            return res.status(404).send({message: "NOK"});
-        }
-
-        const passwordIsValid = bcrypt.compareSync(
-            req.body.password,
-            compte.password
-        );
-
-        if (!passwordIsValid) {
-            console.log("password not valid")
-            return res.status(401).send({
-                accessToken: null,
-                message: "NOK"
+        })
+            .then(compte => {
+                if (req.body.roles) {
+                    Role.findAll({
+                        where: {
+                            nom: {
+                                [Op.or]: req.body.roles
+                            }
+                        }
+                    })
+                        .then(roles => {
+                            compte.setRoles(roles).then(() => {
+                                res.send({ message: "OK" });
+                            });
+                        });
+                } else {
+                    //! compte role = 1
+                    compte.setRoles([1]).then(() => {
+                        res.send({ message: "OK" });
+                    });
+                }
+            })
+            .catch(err => {
+                res.status(500).send({ message: err.message });
+                console.log("message:"  + err.message);
             });
-        }
+    }
+};
 
-        const token = jwt.sign({ id: compte.id }, process.env.JWT_SECRET, {
-            expiresIn: 86400 // 24 hours
-        });
+exports.login = (req, res) => {
+    if(!req.body.login || !req.body.password){
+        res.status(400).send({ message: "NOK" });
+    } else {
+        Compte.findOne({
+            where: {
+                login: req.body.login
+            }
+        })
+            .then(compte => {
+                if (!compte) {
+                    return res.status(404).send({ message: "NOK" });
+                }
 
-        const authorities = [];
-        const roles = await compte.getRoles();
-        roles.map(role => {
-            authorities.push(role.nom);
-        });
-        res.status(200).send({
-            id: compte.id,
-            login: compte.login,
-            roles: authorities,
-            accessToken: token
-        });
+                const passwordIsValid = bcrypt.compareSync(
+                    req.body.password,
+                    compte.password
+                );
 
-    } catch (error) {
-        res.status(500).send({ message: "NOK" });
+                if (!passwordIsValid) {
+                    return res.status(401).send({
+                        accessToken: null,
+                        message: "NOK"
+                    });
+                }
+
+                const token = jwt.sign({ id: compte.id }, process.env.JWT_SECRET, {
+                    expiresIn: 86400 // 24 hours
+                });
+
+                const authorities = [];
+                compte.getRoles().then(roles => {
+                    for (let i = 0; i < roles.length; i++) {
+                        authorities.push(roles[i].nom);
+                    }
+                    res.status(200).send({
+                        id: compte.id,
+                        login: compte.login,
+                        roles: authorities,
+                        accessToken: token
+                    });
+                });
+            })
+            .catch(err => {
+                res.status(500).send({ message: err.message });
+            });
     }
 };
