@@ -19,4 +19,7 @@ module.exports = (app) => {
     app.get("/listePersonne",
         [authJwt.verifyToken, authJwt.isPersonne],
         personneController.readAll);
+    app.put("/updatePersonne",
+        [authJwt.verifyToken, verifyRegister.checkDuplicateEmail, authJwt.isPersonne],
+        personneController.update);
 };
