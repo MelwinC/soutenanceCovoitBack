@@ -18,7 +18,7 @@ exports.register = async (req, res) => {
             login: req.body.login,
             password: bcrypt.hashSync(req.body.password)
         });
-        compte.setRoles(role);
+        compte.addRoles(role);
 
         res.status(201).send({ message: "OK" });
     } catch (error) {
