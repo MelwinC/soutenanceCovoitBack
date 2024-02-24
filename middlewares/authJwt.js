@@ -16,13 +16,13 @@ verifyToken = (req, res, next) => {
                 message: "Accès non autorisé / Token expiré !"
             });
         }
-        req.userId = decoded.id;
+        req.id_compte = decoded.id;
         next();
     });
 };
 
 isAdmin = (req, res, next) => {
-    Compte.findByPk(req.userId).then(compte => {
+    Compte.findByPk(req.id_compte).then(compte => {
         compte.getRoles().then(roles => {
             for (let i = 0; i < roles.length; i++) {
                 if (roles[i].nom === "admin") {
@@ -38,7 +38,7 @@ isAdmin = (req, res, next) => {
 };
 
 isPersonne = (req, res, next) => {
-    Compte.findByPk(req.userId).then(compte => {
+    Compte.findByPk(req.id_compte).then(compte => {
         compte.getRoles().then(roles => {
             for (let i = 0; i < roles.length; i++) {
                 if (roles[i].nom === "personne") {
