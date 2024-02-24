@@ -50,13 +50,11 @@ exports.registerAdmin = async (req, res) => {
 exports.login = async (req, res) => {
     try {
         if(!req.body.login || !req.body.password) {
-            console.log("login or password not found")
             return res.status(400).send({message: "NOK"});
         }
 
         const compte = await Compte.findOne({where: { login: req.body.login }});
         if (!compte) {
-            console.log("compte not found")
             return res.status(404).send({message: "NOK"});
         }
 
@@ -66,7 +64,6 @@ exports.login = async (req, res) => {
         );
 
         if (!passwordIsValid) {
-            console.log("password not valid")
             return res.status(401).send({
                 accessToken: null,
                 message: "NOK"
