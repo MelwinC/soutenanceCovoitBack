@@ -8,8 +8,8 @@ module.exports = (sequelize) => {
 
     Ville.associate = models => {
         Ville.hasMany(models.personne, { foreignKey: 'id_ville' });
-        Ville.hasMany(models.trajet, { foreignKey: 'id_ville_dep', as: 'TrajetsDepart' });
-        Ville.hasMany(models.trajet, { foreignKey: 'id_ville_arr', as: 'TrajetsArrivee' });
+        Ville.hasMany(models.trajet, { foreignKey: 'id_ville_dep' });
+        Ville.hasMany(models.trajet, { foreignKey: 'id_ville_arr' });
     };
 
     return Ville;
