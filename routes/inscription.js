@@ -12,5 +12,5 @@ module.exports = (app) => {
 
     app.post("/insertInscription",
         [authJwt.verifyToken, authJwt.isPersonne],
-        inscriptionController.insertInscription);
+        inscriptionController.insert);
 };
