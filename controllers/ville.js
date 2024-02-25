@@ -52,7 +52,6 @@ exports.delete = async (req, res) => {
         await ville.destroy();
         res.status(200).send({ message: "OK" });
     } catch (error) {
-        console.log(error)
         res.status(500).send({ message: "NOK" });
     }
 };
