@@ -4,7 +4,12 @@ module.exports = (sequelize) => {
     const Voiture = sequelize.define('voiture', {
         modele: DataTypes.STRING,
         place: DataTypes.INTEGER,
-        immatriculation: DataTypes.STRING
+        immatriculation: DataTypes.STRING,
+        id_marque: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            onDelete: 'RESTRICT'
+        }
     }, {
         indexes: [
             {
