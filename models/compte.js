@@ -11,7 +11,7 @@ module.exports = (sequelize) => {
 
     Compte.associate = models => {
         Compte.belongsToMany(models.role, { through: 'posseder', foreignKey: 'id_compte', otherKey: 'id_role'});
-        Compte.hasOne(models.personne, { foreignKey: 'id_compte' });
+        Compte.hasOne(models.personne, { foreignKey: 'id_compte', onDelete: 'CASCADE' });
     };
 
     return Compte;

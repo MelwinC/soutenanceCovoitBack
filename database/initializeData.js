@@ -111,6 +111,27 @@ async function initial() {
             }
         ]);
 
+        await models.trajet.bulkCreate([
+            {
+                kms: 65,
+                dateT: "2024-02-28",
+                place_proposees: 3,
+                id_ville_dep: ville1.id,
+                id_ville_arr: ville2.id,
+                id_personne: personne.id
+            },
+            {
+                kms: 65,
+                dateT: "2024-11-11",
+                place_proposees: 4,
+                id_ville_dep: ville2.id,
+                id_ville_arr: ville1.id,
+                id_personne: personne2.id
+            }
+        ]);
+
+        await personne.addTrajets([2]);
+        await personne2.addTrajets([1]);
 
     } catch (error) {
         console.error("Erreur lors de l'initialisation des data: ", error);

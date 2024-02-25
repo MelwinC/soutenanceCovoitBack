@@ -28,10 +28,12 @@ require('./routes/marque')(app);
 require('./routes/personne')(app);
 require('./routes/voiture')(app);
 require('./routes/trajet')(app);
+require('./routes/inscription')(app);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-  next(createError(404));
+  // next(createError(404));
+  res.status(404).send({message: "Route not found"});
 });
 
 // error handler
