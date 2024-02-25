@@ -27,7 +27,7 @@ module.exports = (sequelize) => {
         Personne.belongsTo(models.compte, { foreignKey: 'id_compte', onDelete: 'CASCADE'});
         Personne.belongsTo(models.ville, { foreignKey: 'id_ville' });
         Personne.hasMany(models.voiture, { foreignKey: 'id_personne' });
-        Personne.belongsToMany(models.trajet, { through: 'reserver', foreignKey: 'id_personne' });
+        Personne.belongsToMany(models.trajet, { through: 'inscrire', foreignKey: 'id_personne' });
     };
 
     return Personne;

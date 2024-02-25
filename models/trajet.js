@@ -11,7 +11,7 @@ module.exports = (sequelize) => {
         Trajet.belongsTo(models.personne, { foreignKey: 'id_personne' });
         Trajet.belongsTo(models.ville, { foreignKey: 'id_ville_dep' });
         Trajet.belongsTo(models.ville, { foreignKey: 'id_ville_arr' });
-        Trajet.belongsToMany(models.personne, { through: 'reserver', foreignKey: 'id_trajet' });
+        Trajet.belongsToMany(models.personne, { through: 'inscrire', foreignKey: 'id_trajet' });
     };
 
     return Trajet;
