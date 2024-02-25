@@ -3,7 +3,7 @@ const DataTypes = require('sequelize').DataTypes;
 module.exports = (sequelize) => {
     const Trajet = sequelize.define('trajet', {
         kms: DataTypes.STRING,
-        dateT: DataTypes.DATEONLY,
+        dateT: DataTypes.DATE,
         place_proposees: DataTypes.STRING
     });
 
