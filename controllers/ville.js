@@ -1,4 +1,5 @@
 const models = require("../models");
+const e = require("express");
 const Ville = models.ville;
 
 exports.insert = async (req, res) => {
@@ -48,9 +49,10 @@ exports.delete = async (req, res) => {
         if(!ville) {
             return res.status(404).send({message: "NOK"});
         }
-        ville.destroy();
+        await ville.destroy();
         res.status(200).send({ message: "OK" });
     } catch (error) {
+        console.log(error)
         res.status(500).send({ message: "NOK" });
     }
 };
