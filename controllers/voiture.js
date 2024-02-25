@@ -2,6 +2,7 @@ const models = require("../models");
 const Voiture = models.voiture;
 const Marque = models.marque;
 const Personne = models.personne;
+const Trajet = models.trajet;
 
 exports.insert = async (req, res) => {
     try {
@@ -64,6 +65,36 @@ exports.readAll = async (req, res) => {
 
         res.send({ message: "OK", voitures: data });
     } catch (error) {
+        res.status(500).send({ message: "NOK" });
+    }
+};
+
+exports.delete = async (req, res) => {
+    try {
+        if(!req.body.id_voiture){
+            return res.status(400).send({ message: "NOK" });
+        }
+        const voiture = await Voiture.findByPk(req.body.id_voiture);
+        if(!voiture){
+            return res.status(400).send({ message: "NOK" });
+        }
+        const personne = await Personne.findOne({ where: { id_compte: req.id_compte } });
+        if(!personne){
+            return res.status(400).send({ message: "NOK" });
+        }
+        if(personne.id !== voiture.id_personne){
+            return res.status(400).send({ message: "NOK" });
+        }
+        const trajets = await Trajet.findAll({ where: { id_personne: personne.id } });
+        trajets.map(async (trajet) => {
+            const inscrits = await trajet.getPersonnes();
+            trajet.removePersonnes(inscrits);
+            await trajet.destroy();
+        });
+        await voiture.destroy();
+        res.status(200).send({ message: "OK" });
+    } catch (error) {
+        console.log(error)
         res.status(500).send({ message: "NOK" });
     }
 };

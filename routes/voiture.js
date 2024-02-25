@@ -16,4 +16,7 @@ module.exports = (app) => {
     app.post("/insertVoiture",
         [authJwt.verifyToken, authJwt.isPersonne],
         voitureController.insert);
+    app.delete("/deleteVoiture",
+        [authJwt.verifyToken, authJwt.isPersonne],
+        voitureController.delete);
 };
