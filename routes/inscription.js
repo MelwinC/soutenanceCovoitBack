@@ -22,4 +22,7 @@ module.exports = (app) => {
     app.post("/insertInscription",
         [authJwt.verifyToken, authJwt.isPersonne],
         inscriptionController.insert);
+    app.delete("/deleteInscription",
+        [authJwt.verifyToken, authJwt.isPersonne],
+        inscriptionController.delete);
 };
