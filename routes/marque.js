@@ -16,4 +16,7 @@ module.exports = (app) => {
     app.post("/insertMarque",
         [authJwt.verifyToken, authJwt.isAdmin],
         marqueController.insert);
+    app.delete("/deleteMarque",
+        [authJwt.verifyToken, authJwt.isAdmin],
+        marqueController.delete);
 };
