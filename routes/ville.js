@@ -16,4 +16,7 @@ module.exports = (app) => {
     app.post("/insertVille",
         [authJwt.verifyToken, authJwt.isAdmin],
         villeController.insert);
+    app.delete("/deleteVille",
+        [authJwt.verifyToken, authJwt.isAdmin],
+        villeController.delete);
 };

@@ -38,3 +38,19 @@ exports.readAll = async (req, res) => {
         res.status(500).send({ message: "NOK" });
     }
 };
+
+exports.delete = async (req, res) => {
+    try {
+        if(!req.body.id_ville){
+            return res.status(400).send({ message: "NOK" });
+        }
+        const ville = await Ville.findByPk(req.body.id_ville);
+        if(!ville) {
+            return res.status(404).send({message: "NOK"});
+        }
+        ville.destroy();
+        res.status(200).send({ message: "OK" });
+    } catch (error) {
+        res.status(500).send({ message: "NOK" });
+    }
+};
