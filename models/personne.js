@@ -6,6 +6,11 @@ module.exports = (sequelize) => {
         nom: DataTypes.STRING,
         email: DataTypes.STRING,
         tel: DataTypes.STRING,
+        id_ville: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            onDelete: 'RESTRICT'
+        }
     },
         {
             indexes: [
@@ -26,8 +31,8 @@ module.exports = (sequelize) => {
     Personne.associate = models => {
         Personne.belongsTo(models.compte, { foreignKey: 'id_compte', onDelete: 'CASCADE'});
         Personne.belongsTo(models.ville, { foreignKey: 'id_ville' });
-        Personne.hasMany(models.voiture, { foreignKey: 'id_personne' });
-        Personne.belongsToMany(models.trajet, { through: 'inscrire', foreignKey: 'id_personne' });
+        Personne.hasMany(models.voiture, { foreignKey: 'id_personne', onDelete: 'CASCADE' });
+        Personne.belongsToMany(models.trajet, { through: 'inscrire', foreignKey: 'id_personne', onDelete: 'CASCADE' });
     };
 
     return Personne;
