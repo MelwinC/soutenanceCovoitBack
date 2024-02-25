@@ -33,3 +33,105 @@ exports.insert = async (req, res) => {
         res.status(500).send({ message: "NOK" });
     }
 };
+
+exports.readAll = async (req, res) => {
+    try {
+        const personne = await Personne.findOne({ where: { id_compte: req.id_compte } });
+        if(!personne) {
+            return res.status(404).send({message: "NOK"});
+        }
+
+        const trajetsConducteur = await Trajet.findAll({
+            where: { id_personne: personne.id }
+        });
+
+        const trajetsPassager = await personne.getTrajets();
+
+        const inscriptionsConducteur = trajetsConducteur.map(trajet => {
+            return {
+                id: trajet.id,
+                kms: trajet.kms,
+                dateT: trajet.dateT,
+                place_proposees: trajet.place_proposees,
+                id_personne: trajet.id_personne,
+                id_ville_dep: trajet.id_ville_dep,
+                id_ville_arr: trajet.id_ville_arr,
+            };
+        });
+
+        const inscriptionsPassager = trajetsPassager.map(trajet => {
+            return {
+                id: trajet.id,
+                kms: trajet.kms,
+                dateT: trajet.dateT,
+                place_proposees: trajet.place_proposees,
+                id_personne: trajet.id_personne,
+                id_ville_dep: trajet.id_ville_dep,
+                id_ville_arr: trajet.id_ville_arr,
+            };
+        });
+
+        res.status(200).send({ message: "OK", inscriptionsConducteur, inscriptionsPassager });
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({ message: "NOK" });
+    }
+};
+
+exports.readConducteur = async (req, res) => {
+    try {
+        const personne = await Personne.findOne({ where: { id_compte: req.id_compte } });
+        if(!personne) {
+            return res.status(404).send({message: "NOK"});
+        }
+
+        const trajetsConducteur = await Trajet.findAll({
+            where: { id_personne: personne.id }
+        });
+
+        const inscriptions = trajetsConducteur.map(trajet => {
+            return {
+                id: trajet.id,
+                kms: trajet.kms,
+                dateT: trajet.dateT,
+                place_proposees: trajet.place_proposees,
+                id_personne: trajet.id_personne,
+                id_ville_dep: trajet.id_ville_dep,
+                id_ville_arr: trajet.id_ville_arr,
+            };
+        });
+
+        res.status(200).send({ message: "OK", inscriptions });
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({ message: "NOK" });
+    }
+};
+
+exports.readPassager = async (req, res) => {
+    try {
+        const personne = await Personne.findOne({ where: { id_compte: req.id_compte } });
+        if(!personne) {
+            return res.status(404).send({message: "NOK"});
+        }
+
+        const trajetsPassager = await personne.getTrajets();
+
+        const inscriptions = trajetsPassager.map(trajet => {
+            return {
+                id: trajet.id,
+                kms: trajet.kms,
+                dateT: trajet.dateT,
+                place_proposees: trajet.place_proposees,
+                id_personne: trajet.id_personne,
+                id_ville_dep: trajet.id_ville_dep,
+                id_ville_arr: trajet.id_ville_arr,
+            };
+        });
+
+        res.status(200).send({ message: "OK", inscriptions });
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({ message: "NOK" });
+    }
+};

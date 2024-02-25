@@ -10,6 +10,15 @@ module.exports = (app) => {
         next();
     });
 
+    app.get("/listeInscription",
+        [authJwt.verifyToken, authJwt.isPersonne],
+        inscriptionController.readAll);
+    app.get("/listeInscriptionConducteur",
+        [authJwt.verifyToken, authJwt.isPersonne],
+        inscriptionController.readConducteur);
+    app.get("/listeInscriptionUser",
+        [authJwt.verifyToken, authJwt.isPersonne],
+        inscriptionController.readPassager);
     app.post("/insertInscription",
         [authJwt.verifyToken, authJwt.isPersonne],
         inscriptionController.insert);
