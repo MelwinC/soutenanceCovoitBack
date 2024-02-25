@@ -10,6 +10,9 @@ module.exports = (app) => {
         next();
     });
 
+    app.get("/listeTrajet",
+        [authJwt.verifyToken, authJwt.isPersonne],
+        trajetController.readAll);
     app.post("/insertTrajet",
         [authJwt.verifyToken, authJwt.isPersonne],
         trajetController.insert);

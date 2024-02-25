@@ -40,3 +40,27 @@ exports.insert = async (req, res) => {
         res.status(500).send({ message: "NOK" });
     }
 };
+
+exports.readAll = async (req, res) => {
+    try {
+        const trajets = await Trajet.findAll();
+        if(trajets.length === 0) {
+            return res.status(404).send({message: "NOK"});
+        }
+
+        const data = trajets.map(trajet => {
+            return {
+                id: trajet.id,
+                kms: trajet.kms,
+                dateT: trajet.dateT,
+                place_proposees: trajet.place_proposees,
+                id_personne: trajet.id_personne,
+                id_ville_dep: trajet.id_ville_dep,
+                id_ville_arr: trajet.id_ville_arr,
+            }
+        });
+        res.status(200).send({ message: "OK", trajets: data });
+    } catch (error) {
+        res.status(500).send({ message: "NOK" });
+    }
+};
