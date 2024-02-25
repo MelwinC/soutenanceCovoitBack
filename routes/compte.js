@@ -1,5 +1,5 @@
 const { verifyRegister, authJwt } = require("../middlewares");
-const controller = require("../controllers/auth");
+const controller = require("../controllers/compte");
 
 module.exports = (app) => {
     app.use((req, res, next) => {
