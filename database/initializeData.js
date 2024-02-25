@@ -114,7 +114,7 @@ async function initial() {
         await models.trajet.bulkCreate([
             {
                 kms: 65,
-                dateT: "2024-02-28",
+                dateT: "2024-02-28T08:30:00Z",
                 place_proposees: 3,
                 id_ville_dep: ville1.id,
                 id_ville_arr: ville2.id,
@@ -122,7 +122,7 @@ async function initial() {
             },
             {
                 kms: 65,
-                dateT: "2024-11-11",
+                dateT: "2024-02-27T14:00:00Z",
                 place_proposees: 4,
                 id_ville_dep: ville2.id,
                 id_ville_arr: ville1.id,
