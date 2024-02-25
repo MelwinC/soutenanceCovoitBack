@@ -13,6 +13,9 @@ module.exports = (app) => {
     app.get("/listeTrajet",
         [authJwt.verifyToken, authJwt.isPersonne],
         trajetController.readAll);
+    app.get("/rechercheTrajet",
+        [authJwt.verifyToken, authJwt.isPersonne],
+        trajetController.search);
     app.post("/insertTrajet",
         [authJwt.verifyToken, authJwt.isPersonne],
         trajetController.insert);
