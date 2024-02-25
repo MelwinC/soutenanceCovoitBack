@@ -21,12 +21,13 @@ app.use(cors(corsOptions)).use(logger('dev')).use(express.json()).use(express.ur
 //   });
 // });
 
-require('./routes/auth')(app);
+require('./routes/compte')(app);
 require('./routes/testRoles')(app);
 require('./routes/ville')(app);
 require('./routes/marque')(app);
 require('./routes/personne')(app);
 require('./routes/voiture')(app);
+require('./routes/trajet')(app);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

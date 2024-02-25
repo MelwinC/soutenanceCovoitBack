@@ -9,8 +9,8 @@ module.exports = (sequelize) => {
 
     Trajet.associate = models => {
         Trajet.belongsTo(models.personne, { foreignKey: 'id_personne' });
-        Trajet.belongsTo(models.ville, { foreignKey: 'id_ville_dep', as: 'VilleDepart' });
-        Trajet.belongsTo(models.ville, { foreignKey: 'id_ville_arr', as: 'VilleArrivee' });
+        Trajet.belongsTo(models.ville, { foreignKey: 'id_ville_dep' });
+        Trajet.belongsTo(models.ville, { foreignKey: 'id_ville_arr' });
         Trajet.belongsToMany(models.personne, { through: 'reserver', foreignKey: 'id_trajet' });
     };
 
