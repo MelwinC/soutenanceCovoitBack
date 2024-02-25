@@ -107,27 +107,20 @@ exports.delete = async (req, res) => {
         if(!req.body.id_trajet){
             return res.status(400).send({ message: "NOK" });
         }
-
         const personne = await Personne.findOne({ where: { id_compte: req.id_compte } });
         if(!personne) {
             return res.status(400).send({message: "NOK"});
         }
-
         const trajet = await Trajet.findByPk(req.body.id_trajet);
         if(!trajet){
             return res.status(400).send({message: "NOK"});
         }
-
         if(trajet.id_personne !== personne.id){
             return res.status(400).send({message: "NOK"});
         }
-
         const inscrits = await trajet.getPersonnes();
-        console.log(inscrits);
-
         trajet.removePersonnes(inscrits);
         await trajet.destroy();
-
         res.status(200).send({ message: "OK" });
     } catch (error) {
         res.status(500).send({ message: "NOK" });
