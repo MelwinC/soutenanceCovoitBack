@@ -19,4 +19,7 @@ module.exports = (app) => {
     app.post("/insertTrajet",
         [authJwt.verifyToken, authJwt.isPersonne],
         trajetController.insert);
+    app.delete("/deleteTrajet",
+        [authJwt.verifyToken, authJwt.isPersonne],
+        trajetController.delete);
 };
