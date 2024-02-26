@@ -11,7 +11,7 @@ exports.insert = async (req, res) => {
         }
 
         const immatriculation = req.body.immatriculation;
-        const immatriculationRegex = /^[A-Z]{2}-[0-9]{3}-[A-Z]{2}$/;
+        const immatriculationRegex = /^[A-Z]{2}-\d{3}-[A-Z]{2}$/;
         if (!immatriculation || !immatriculationRegex.test(immatriculation)) {
             return res.status(400).send({ message: "NOK" });
         }
