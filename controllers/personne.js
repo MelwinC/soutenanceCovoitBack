@@ -157,3 +157,19 @@ exports.update = async (req, res) => {
         res.status(500).send({ message: "NOK" });
     }
 };
+
+exports.delete = async (req, res) => {
+    try {
+        if(!req.body.id_personne){
+            return res.status(400).send({ message: "NOK" });
+        }
+        const personne = await Personne.findByPk(req.body.id_personne);
+        if(!personne){
+            return res.status(400).send({ message: "NOK" });
+        }
+        await personne.destroy();
+        res.status(200).send({ message: "OK" });
+    } catch (error) {
+        res.status(500).send({ message: "NOK" });
+    }
+};
