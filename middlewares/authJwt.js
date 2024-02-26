@@ -29,23 +29,13 @@ isAdmin = async (req, res, next) => {
                 message: "Compte non trouvé !"
             });
         }
-
         const roles = await compte.getRoles();
-        if(!roles){
-            return res.status(404).send({
-                message: "Roles non trouvés !"
-            });
+        const admin = roles.find(role => role.nom === 'admin');
+        if(admin){
+            next();
+        } else {
+            res.status(403).send({ message: "Le role `admin` est nécessaire !" });
         }
-        for (let i = 0; i < roles.length; i++) {
-            if (roles[i].nom === "admin") {
-                next();
-                return;
-            }
-        }
-
-        res.status(403).send({
-            message: "Le role `admin` est nécessaire!"
-        });
     } catch (error) {
         res.status(500).send({ message: "NOK" });
     }
@@ -59,23 +49,42 @@ isPersonne = async (req, res, next) => {
                 message: "Compte non trouvé !"
             });
         }
-
         const roles = await compte.getRoles();
-        if(!roles){
-            return res.status(404).send({
-                message: "Roles non trouvés !"
+        const rolePersonne = roles.find(role => role.nom === 'personne');
+        if(rolePersonne){
+            next();
+        } else {
+            res.status(403).send({
+                message: "Le role `personne` est nécessaire!"
             });
         }
-        for (let i = 0; i < roles.length; i++) {
-            if (roles[i].nom === "personne") {
-                next();
-                return;
-            }
-        }
+    } catch (error) {
+        res.status(500).send({ message: "NOK" });
+    }
+};
 
-        res.status(403).send({
-            message: "Le role `personne` est nécessaire!"
+isAdminOrOwner = async (req, res, next) => {
+    try {
+        const compte = await Compte.findByPk(req.id_compte, {
+            include: [{
+                model: models.personne
+            }]
         });
+        if (!compte) {
+            return res.status(404).send({ message: "Compte non trouvé !" });
+        }
+        const personne = compte.personne;
+        if (!personne) {
+            return res.status(404).send({ message: "Personne non trouvée !" });
+        }
+        const roles = await compte.getRoles();
+        const admin = roles.find(role => role.nom === 'admin');
+        const owner = (req.body.id_personne === personne.id);
+        if(owner || admin){
+            next();
+        } else {
+            res.status(403).send({ message: "Vous devez être propriétaire ou `admin` !" });
+        }
     } catch (error) {
         res.status(500).send({ message: "NOK" });
     }
@@ -84,7 +93,8 @@ isPersonne = async (req, res, next) => {
 const authJwt = {
     verifyToken: verifyToken,
     isAdmin: isAdmin,
-    isPersonne: isPersonne
+    isPersonne: isPersonne,
+    isAdminOrOwner: isAdminOrOwner
 };
 
 module.exports = authJwt;
