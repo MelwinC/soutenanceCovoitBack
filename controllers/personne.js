@@ -23,8 +23,10 @@ exports.insert = async (req, res) => {
         }
 
         const email = req.body.email;
-        const emailRegex = /^[a-zA-Z\d._%+-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/;
-        if (!email || !emailRegex.test(email)) {
+        if(!email){
+            return res.status(400).send({ message: "NOK" });
+        }
+        if(!checkMail(req.body.email)){
             return res.status(400).send({ message: "NOK" });
         }
 
@@ -106,18 +108,10 @@ exports.update = async (req, res) => {
             return res.status(400).send({ message: "NOK" });
         }
         if(req.body.email){
-            const emailRegex = /^[a-zA-Z\d._%+-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/;
-            if (!emailRegex.test(req.body.email)) {
+            if(!checkMail(req.body.email)){
                 return res.status(400).send({ message: "NOK" });
             }
             personne.email = req.body.email;
-        }
-        let voiture;
-        if(req.body.id_marque || req.body.modele || req.body.place){
-            voiture = await Voiture.findOne({ where: { id_personne: req.body.id_personne } });
-            if(!voiture){
-                return res.status(400).send({ message: "NOK" });
-            }
         }
         if(req.body.prenom){
             personne.prenom = req.body.prenom;
@@ -128,23 +122,8 @@ exports.update = async (req, res) => {
         if(req.body.tel){
             personne.tel = req.body.tel;
         }
-        if(req.body.id_marque){
-            const marque = await Marque.findByPk(req.body.id_marque);
-            if(!marque){
-                return res.status(400).send({ message: "NOK" });
-            }
-            voiture.id_marque = req.body.id_marque;
-        }
-        if(req.body.modele){
-            voiture.modele = req.body.modele;
-        }
-        if(req.body.place){
-            voiture.place = req.body.place;
-        }
+        await updateVoiture(req, res);
         await personne.save();
-        if(voiture){
-            await voiture.save();
-        }
         res.status(201).send({ message: "OK" });
     } catch (error) {
         res.status(500).send({ message: "NOK" });
@@ -166,3 +145,35 @@ exports.delete = async (req, res) => {
         res.status(500).send({ message: "NOK" });
     }
 };
+
+const updateVoiture = async (req, res) => {
+    let voiture;
+    if(req.body.id_marque || req.body.modele || req.body.place){
+        voiture = await Voiture.findOne({ where: { id_personne: req.body.id_personne } });
+        if(!voiture){
+            return res.status(400).send({ message: "NOK" });
+        }
+    }
+
+    if(req.body.id_marque){
+        const marque = await Marque.findByPk(req.body.id_marque);
+        if(!marque){
+            return res.status(400).send({ message: "NOK" });
+        }
+        voiture.id_marque = req.body.id_marque;
+    }
+    if(req.body.modele){
+        voiture.modele = req.body.modele;
+    }
+    if(req.body.place){
+        voiture.place = req.body.place;
+    }
+    if(voiture){
+        await voiture.save();
+    }
+}
+
+const checkMail = (email) => {
+    const emailRegex = /^[a-zA-Z\d._%+-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+}
