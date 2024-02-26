@@ -3,7 +3,7 @@ const models = require("../models");
 const Compte = models.compte;
 require('dotenv').config();
 
-verifyToken = (req, res, next) => {
+const verifyToken = (req, res, next) => {
     let token = req.headers["x-access-token"];
     if (!token) {
         return res.status(403).send({
@@ -21,7 +21,7 @@ verifyToken = (req, res, next) => {
     });
 };
 
-isAdmin = async (req, res, next) => {
+const isAdmin = async (req, res, next) => {
     try {
         const compte = await Compte.findByPk(req.id_compte);
         if(!compte){
@@ -41,7 +41,7 @@ isAdmin = async (req, res, next) => {
     }
 };
 
-isPersonne = async (req, res, next) => {
+const isPersonne = async (req, res, next) => {
     try {
         const compte = await Compte.findByPk(req.id_compte);
         if(!compte){
@@ -63,7 +63,7 @@ isPersonne = async (req, res, next) => {
     }
 };
 
-isAdminOrOwner = async (req, res, next) => {
+const isAdminOrOwner = async (req, res, next) => {
     try {
         const compte = await Compte.findByPk(req.id_compte, {
             include: [{
@@ -94,7 +94,7 @@ const authJwt = {
     verifyToken: verifyToken,
     isAdmin: isAdmin,
     isPersonne: isPersonne,
-    isAdminOrOwner: isAdminOrOwner
+    isAdminOrOwner: isAdminOrOwnerg
 };
 
 module.exports = authJwt;
