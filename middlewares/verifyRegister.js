@@ -2,7 +2,7 @@ const models = require("../models");
 const Compte = models.compte;
 const Personne = models.personne
 
-checkDuplicateLogin = async (req, res, next) => {
+const checkDuplicateLogin = async (req, res, next) => {
     try{
         if(!req.body.login){
             return res.status(400).send({
@@ -21,7 +21,7 @@ checkDuplicateLogin = async (req, res, next) => {
     }
 };
 
-checkDuplicateEmail = async (req, res, next) => {
+const checkDuplicateEmail = async (req, res, next) => {
     try{
         if(req.body.email){
             const personne = await Personne.findOne({ where: { email: req.body.email } });
