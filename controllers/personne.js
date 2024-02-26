@@ -112,25 +112,12 @@ exports.update = async (req, res) => {
             }
             personne.email = req.body.email;
         }
+        let voiture;
         if(req.body.id_marque || req.body.modele || req.body.place){
-            const voiture = await Voiture.findOne({ where: { id_personne: req.body.id_personne } });
+            voiture = await Voiture.findOne({ where: { id_personne: req.body.id_personne } });
             if(!voiture){
                 return res.status(400).send({ message: "NOK" });
             }
-            if(req.body.id_marque){
-                const marque = await Marque.findByPk(req.body.id_marque);
-                if(!marque){
-                    return res.status(400).send({ message: "NOK" });
-                }
-                voiture.id_marque = req.body.id_marque;
-            }
-            if(req.body.modele){
-                voiture.modele = req.body.modele;
-            }
-            if(req.body.place){
-                voiture.place = req.body.place;
-            }
-            await voiture.save();
         }
         if(req.body.prenom){
             personne.prenom = req.body.prenom;
@@ -141,7 +128,23 @@ exports.update = async (req, res) => {
         if(req.body.tel){
             personne.tel = req.body.tel;
         }
+        if(req.body.id_marque){
+            const marque = await Marque.findByPk(req.body.id_marque);
+            if(!marque){
+                return res.status(400).send({ message: "NOK" });
+            }
+            voiture.id_marque = req.body.id_marque;
+        }
+        if(req.body.modele){
+            voiture.modele = req.body.modele;
+        }
+        if(req.body.place){
+            voiture.place = req.body.place;
+        }
         await personne.save();
+        if(voiture){
+            await voiture.save();
+        }
         res.status(201).send({ message: "OK" });
     } catch (error) {
         res.status(500).send({ message: "NOK" });
