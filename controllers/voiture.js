@@ -83,7 +83,7 @@ exports.delete = async (req, res) => {
             return res.status(400).send({ message: "NOK" });
         }
         if(personne.id !== voiture.id_personne){
-            return res.status(400).send({ message: "NOK" });
+            return res.status(403).send({ message: "NOK" });
         }
         const trajets = await Trajet.findAll({ where: { id_personne: personne.id } });
         trajets.map(async (trajet) => {
@@ -94,7 +94,6 @@ exports.delete = async (req, res) => {
         await voiture.destroy();
         res.status(200).send({ message: "OK" });
     } catch (error) {
-        console.log(error)
         res.status(500).send({ message: "NOK" });
     }
 };
