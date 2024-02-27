@@ -4,11 +4,15 @@ const Trajet = models.trajet;
 
 exports.insert = async (req, res) => {
     try {
-        if(!req.body.id_personne || !req.body.id_trajet || (req.body.id_personne === req.id_compte)) {
+        if(!req.body.id_personne || !req.body.id_trajet) {
             return res.status(400).send({message: "NOK"});
         }
-        const personne = await Personne.findByPk(req.body.id_personne);
+        const compte = await models.compte.findByPk(req.id_compte);
+        const personne = await compte.getPersonne();
         if(!personne){
+            return res.status(400).send({message: "NOK"});
+        }
+        if(personne.id !== req.body.id_personne){
             return res.status(400).send({message: "NOK"});
         }
         const trajet = await Trajet.findByPk(req.body.id_trajet);
