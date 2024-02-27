@@ -4,7 +4,7 @@ const Trajet = models.trajet;
 
 exports.insert = async (req, res) => {
     try {
-        if(!req.body.id_personne || !req.body.id_trajet) {
+        if(!req.body.id_personne || !req.body.id_trajet || (req.body.id_personne === req.id_compte)) {
             return res.status(400).send({message: "NOK"});
         }
         const personne = await Personne.findByPk(req.body.id_personne);
@@ -26,6 +26,10 @@ exports.insert = async (req, res) => {
             if (inscription.id === req.body.id_trajet) {
                 return res.status(400).send({ message: "NOK" });
             }
+        }
+        const placesDispo = await getPlacesDispo(trajet);
+        if(placesDispo === 0){
+            return res.status(400).send({message: "NOK"});
         }
         await personne.addTrajets([req.body.id_trajet]);
         res.status(201).send({ message: "OK" });
@@ -163,3 +167,9 @@ exports.delete = async (req, res) => {
         res.status(500).send({ message: "NOK" });
     }
 };
+
+const getPlacesDispo = async (trajet) => {
+    const placesProposees = trajet.place_proposees;
+    const nbInscrits = await trajet.countPersonnes();
+    return (placesProposees - nbInscrits);
+}
