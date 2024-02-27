@@ -104,7 +104,7 @@ exports.update = async (req, res) => {
             return res.status(400).send({message: "NOK"});
         }
         const compte = await Compte.findByPk(req.id_compte);
-        const personne = compte.getPersonne();
+        const personne = await compte.getPersonne();
         if(!personne){
             return res.status(400).send({ message: "NOK" });
         }
