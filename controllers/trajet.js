@@ -9,6 +9,10 @@ exports.insert = async (req, res) => {
         if(!req.body.id_personne || !req.body.kms || !req.body.dateT || !req.body.place_proposees || !req.body.id_ville_dep || !req.body.id_ville_arr || (req.body.id_ville_dep === req.body.id_ville_arr)) {
             return res.status(400).send({message: "NOK"});
         }
+        const trajet = await Trajet.findOne({ where: { id_ville_dep: req.body.id_ville_dep, id_ville_arr: req.body.id_ville_arr, dateT: req.body.dateT, id_personne: req.body.id_personne } });
+        if(trajet){
+            return res.status(400).send({message: "NOK"});
+        }
         const personne = await Personne.findByPk(req.body.id_personne);
         if(!personne){
             return res.status(400).send({message: "NOK"});
