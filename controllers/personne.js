@@ -103,9 +103,13 @@ exports.update = async (req, res) => {
         if(!req.body.id_personne){
             return res.status(400).send({message: "NOK"});
         }
-        const personne = await Personne.findByPk(req.body.id_personne);
+        const compte = await Compte.findByPk(req.id_compte);
+        const personne = compte.getPersonne();
         if(!personne){
             return res.status(400).send({ message: "NOK" });
+        }
+        if(req.body.id_personne !== personne.id){
+            return res.status(403).send({message: "NOK"});
         }
         if(req.body.email){
             if(!checkMail(req.body.email)){
