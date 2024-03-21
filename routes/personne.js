@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 const { authJwt, verifyRegister } = require("../middlewares");
 const personneController = require("../controllers/personne");
@@ -74,9 +74,11 @@ const personneController = require("../controllers/personne");
  *       '401':
  *         description: Non autorisé. L'utilisateur doit être connecté et être une personne.
  */
-router.post("/insertPersonne",
-    [authJwt.verifyToken, verifyRegister.checkDuplicateEmail],
-    personneController.insert);
+router.post(
+  "/insertPersonne",
+  [authJwt.verifyToken, verifyRegister.checkDuplicateEmail],
+  personneController.insert
+);
 
 /**
  * @swagger
@@ -91,9 +93,11 @@ router.post("/insertPersonne",
  *       '401':
  *         description: Non autorisé. L'utilisateur doit être connecté et être une personne.
  */
-router.get("/selectPersonne",
-    [authJwt.verifyToken, authJwt.isPersonne],
-    personneController.select);
+router.get(
+  "/selectPersonne",
+  [authJwt.verifyToken, authJwt.isPersonne],
+  personneController.select
+);
 
 /**
  * @swagger
@@ -108,9 +112,11 @@ router.get("/selectPersonne",
  *       '401':
  *         description: Non autorisé. L'utilisateur doit être connecté et être une personne.
  */
-router.get("/listePersonne",
-    [authJwt.verifyToken, authJwt.isPersonne],
-    personneController.readAll);
+router.get(
+  "/listePersonne",
+  [authJwt.verifyToken, authJwt.isPersonne],
+  personneController.readAll
+);
 
 /**
  * @swagger
@@ -131,9 +137,11 @@ router.get("/listePersonne",
  *       '401':
  *         description: Non autorisé. L'utilisateur doit être connecté et être une personne.
  */
-router.put("/updatePersonne",
-    [authJwt.verifyToken, verifyRegister.checkDuplicateEmail, authJwt.isPersonne],
-    personneController.update);
+router.put(
+  "/updatePersonne",
+  [authJwt.verifyToken, verifyRegister.checkDuplicateEmail, authJwt.isPersonne],
+  personneController.update
+);
 
 /**
  * @swagger
@@ -154,8 +162,15 @@ router.put("/updatePersonne",
  *       '401':
  *         description: Non autorisé. L'utilisateur doit être connecté et être une personne.
  */
-router.delete("/deletePersonne",
-    [authJwt.verifyToken, authJwt.isAdminOrOwner],
-    personneController.delete);
+router.delete(
+  "/deletePersonne",
+  [authJwt.verifyToken, authJwt.isAdminOrOwner],
+  personneController.delete
+);
+router.get(
+  "/getPersonne",
+  [authJwt.verifyToken, authJwt.isPersonne],
+  personneController.getCurrentPersonne
+);
 
 module.exports = router;
