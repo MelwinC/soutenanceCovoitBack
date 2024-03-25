@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 const { authJwt } = require("../middlewares");
 const trajetController = require("../controllers/trajet");
@@ -50,9 +50,11 @@ const trajetController = require("../controllers/trajet");
  *       '401':
  *         description: Non autorisé. L'utilisateur doit être connecté et être une personne.
  */
-router.get("/listeTrajet",
-    [authJwt.verifyToken, authJwt.isPersonne],
-    trajetController.readAll);
+router.get(
+  "/listeTrajet",
+  [authJwt.verifyToken, authJwt.isPersonne],
+  trajetController.readAll
+);
 
 /**
  * @swagger
@@ -67,9 +69,11 @@ router.get("/listeTrajet",
  *       '401':
  *         description: Non autorisé. L'utilisateur doit être connecté et être une personne.
  */
-router.get("/rechercheTrajet",
-    [authJwt.verifyToken, authJwt.isPersonne],
-    trajetController.search);
+router.get(
+  "/rechercheTrajet",
+  [authJwt.verifyToken, authJwt.isPersonne],
+  trajetController.search
+);
 
 /**
  * @swagger
@@ -90,9 +94,11 @@ router.get("/rechercheTrajet",
  *       '401':
  *         description: Non autorisé. L'utilisateur doit être connecté et être une personne.
  */
-router.post("/insertTrajet",
-    [authJwt.verifyToken, authJwt.isPersonne],
-    trajetController.insert);
+router.post(
+  "/insertTrajet",
+  [authJwt.verifyToken, authJwt.isPersonne],
+  trajetController.insert
+);
 
 /**
  * @swagger
@@ -113,8 +119,16 @@ router.post("/insertTrajet",
  *       '401':
  *         description: Non autorisé. L'utilisateur doit être connecté et être une personne.
  */
-router.delete("/deleteTrajet",
-    [authJwt.verifyToken, authJwt.isPersonne],
-    trajetController.delete);
+router.delete(
+  "/deleteTrajet",
+  [authJwt.verifyToken, authJwt.isPersonne],
+  trajetController.delete
+);
+
+router.post(
+  "/getTrajet",
+  [authJwt.verifyToken, authJwt.isPersonne],
+  trajetController.read
+);
 
 module.exports = router;

@@ -167,10 +167,17 @@ router.delete(
   [authJwt.verifyToken, authJwt.isAdminOrOwner],
   personneController.delete
 );
+
 router.get(
   "/getPersonne",
   [authJwt.verifyToken, authJwt.isPersonne],
   personneController.getCurrentPersonne
+);
+
+router.get(
+  "/getProfile",
+  [authJwt.verifyToken, authJwt.isPersonne],
+  personneController.getProfile
 );
 
 module.exports = router;

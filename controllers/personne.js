@@ -211,3 +211,25 @@ exports.getCurrentPersonne = async (req, res) => {
     res.status(500).send({ message: error.message });
   }
 };
+
+exports.getProfile = async (req, res) => {
+  const compte = await Compte.findByPk(req.id_compte);
+  const personne = await compte.getPersonne();
+  const voiture = await Voiture.findOne({
+    where: { id_personne: personne.id },
+  });
+  if (voiture) {
+    const marque = await voiture.getMarque();
+    res.status(200).send({
+      message: "OK",
+      personne,
+      voiture,
+      marque,
+    });
+  } else {
+    res.status(200).send({
+      message: "OK",
+      personne,
+    });
+  }
+};
