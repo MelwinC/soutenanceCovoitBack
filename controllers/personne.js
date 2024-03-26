@@ -106,36 +106,31 @@ exports.readAll = async (req, res) => {
 
 exports.update = async (req, res) => {
   try {
-    if (!req.body.id_personne) {
-      return res.status(400).send({ message: "NOK" });
-    }
     const compte = await Compte.findByPk(req.id_compte);
     const personne = await compte.getPersonne();
     if (!personne) {
       return res.status(400).send({ message: "NOK" });
     }
-    if (req.body.id_personne !== personne.id) {
-      return res.status(403).send({ message: "NOK" });
-    }
     if (req.body.email) {
       if (!checkMail(req.body.email)) {
-        return res.status(400).send({ message: "NOK" });
+        return res.status(400).send({ message: "Format email invalide" });
       }
       personne.email = req.body.email;
     }
-    if (req.body.prenom) {
+    if (req.body.prenom != personne.prenom) {
       personne.prenom = req.body.prenom;
     }
-    if (req.body.nom) {
+    if (req.body.nom != personne.nom) {
       personne.nom = req.body.nom;
     }
-    if (req.body.tel) {
+    if (req.body.tel != personne.tel) {
       personne.tel = req.body.tel;
     }
-    await updateVoiture(req, res);
+    await updateVoiture(req, res, personne);
     await personne.save();
     res.status(201).send({ message: "OK" });
   } catch (error) {
+    console.log(error);
     res.status(500).send({ message: "NOK" });
   }
 };
@@ -156,14 +151,20 @@ exports.delete = async (req, res) => {
   }
 };
 
-const updateVoiture = async (req, res) => {
+const updateVoiture = async (req, res, personne) => {
+  console.log(req.body);
   let voiture;
   if (req.body.id_marque || req.body.modele || req.body.place) {
     voiture = await Voiture.findOne({
-      where: { id_personne: req.body.id_personne },
+      where: { id_personne: personne.id },
     });
     if (!voiture) {
-      return res.status(400).send({ message: "NOK" });
+      voiture = await Voiture.create({
+        id_personne: personne.id,
+        id_marque: req.body.id_marque,
+        modele: req.body.modele,
+        place: req.body.place,
+      });
     }
   }
 

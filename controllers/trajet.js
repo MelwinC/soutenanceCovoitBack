@@ -12,10 +12,15 @@ exports.insert = async (req, res) => {
       !req.body.dateT ||
       !req.body.place_proposees ||
       !req.body.id_ville_dep ||
-      !req.body.id_ville_arr ||
-      req.body.id_ville_dep === req.body.id_ville_arr
+      !req.body.id_ville_arr
     ) {
       return res.status(400).send({ message: "NOK" });
+    }
+
+    if (req.body.id_ville_dep === req.body.id_ville_arr) {
+      return res
+        .status(400)
+        .send({ message: "Same departure & arrival cities" });
     }
     const trajet = await Trajet.findOne({
       where: {
@@ -36,7 +41,7 @@ exports.insert = async (req, res) => {
     if (voiture.length === 0) {
       return res.status(400).send({ message: "NOK" });
     }
-    if (voiture[0].place <= req.body.place_proposees) {
+    if (voiture[0].place < req.body.place_proposees) {
       return res.status(400).send({ message: "NOK" });
     }
     const villeDep = await Ville.findByPk(req.body.id_ville_dep);
