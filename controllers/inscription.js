@@ -62,11 +62,27 @@ exports.readAll = async (req, res) => {
 
     const trajetsPassager = await personne.getTrajets();
 
-    const inscriptionsConducteur = trajetsConducteur.map(async (trajet) => {
-      return {
-        trajet: trajet,
-      };
-    });
+    const inscriptionsConducteur = await Promise.all(
+      trajetsConducteur.map(async (trajet) => {
+        const villeDep = await Ville.findByPk(trajet.id_ville_dep);
+        const villeArr = await Ville.findByPk(trajet.id_ville_arr);
+        const personne = await Personne.findByPk(trajet.id_personne);
+        return {
+          trajet: {
+            id: trajet.id,
+            kms: trajet.kms,
+            dateT: trajet.dateT,
+            place_proposees: trajet.place_proposees,
+            personne: personne,
+            villeDep: villeDep,
+            villeArr: villeArr,
+            place_dispo:
+              trajet.place_proposees - (await trajet.countPersonnes()),
+          },
+          inscrits: await trajet.getPersonnes(),
+        };
+      })
+    );
 
     const inscriptionsPassager = await Promise.all(
       trajetsPassager.map(async (trajet) => {
@@ -85,6 +101,8 @@ exports.readAll = async (req, res) => {
         };
       })
     );
+
+    console.log(inscriptionsConducteur);
 
     res
       .status(200)
