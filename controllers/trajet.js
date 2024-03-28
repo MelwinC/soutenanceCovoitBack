@@ -68,7 +68,13 @@ exports.insert = async (req, res) => {
 
 exports.readAll = async (req, res) => {
   try {
-    const trajets = await Trajet.findAll();
+    const trajets = await Trajet.findAll({
+      where: {
+        dateT: {
+          [Op.gte]: new Date(),
+        },
+      },
+    });
     if (trajets.length === 0) {
       return res.status(404).send({ message: "NOK" });
     }
