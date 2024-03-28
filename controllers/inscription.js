@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const models = require("../models");
 const Personne = models.personne;
 const Trajet = models.trajet;
@@ -32,7 +33,6 @@ exports.insert = async (req, res) => {
     }
     const inscriptions = await personne.getTrajets();
     for (const inscription of inscriptions) {
-      console.log(inscription);
       if (inscription.id === req.body.id_trajet) {
         return res
           .status(400)
@@ -57,10 +57,18 @@ exports.readAll = async (req, res) => {
     });
 
     const trajetsConducteur = await Trajet.findAll({
-      where: { id_personne: personne.id },
+      where: {
+        id_personne: personne.id,
+        dateT: {
+          [Op.gte]: new Date(),
+        },
+      },
     });
 
-    const trajetsPassager = await personne.getTrajets();
+    let trajetsPassager = await personne.getTrajets();
+    trajetsPassager = trajetsPassager.filter(
+      (trajet) => trajet.dateT >= new Date()
+    );
 
     const inscriptionsConducteur = await Promise.all(
       trajetsConducteur.map(async (trajet) => {
@@ -102,13 +110,10 @@ exports.readAll = async (req, res) => {
       })
     );
 
-    console.log(inscriptionsConducteur);
-
     res
       .status(200)
       .send({ message: "OK", inscriptionsConducteur, inscriptionsPassager });
   } catch (error) {
-    console.log(error);
     res.status(500).send({ message: "NOK" });
   }
 };
@@ -140,7 +145,6 @@ exports.readConducteur = async (req, res) => {
 
     res.status(200).send({ message: "OK", inscriptions });
   } catch (error) {
-    console.log(error);
     res.status(500).send({ message: "NOK" });
   }
 };
@@ -170,20 +174,17 @@ exports.readPassager = async (req, res) => {
 
     res.status(200).send({ message: "OK", inscriptions });
   } catch (error) {
-    console.log(error);
     res.status(500).send({ message: "NOK" });
   }
 };
 
 exports.delete = async (req, res) => {
   try {
-    if (!req.body.id_trajet) {
+    if (!req.body.id_trajet || !req.body.id_personne) {
       return res.status(400).send({ message: "NOK" });
     }
 
-    const personne = await Personne.findOne({
-      where: { id_compte: req.id_compte },
-    });
+    const personne = await Personne.findByPk(req.body.id_personne);
     if (!personne) {
       return res.status(400).send({ message: "NOK" });
     }
@@ -196,7 +197,6 @@ exports.delete = async (req, res) => {
     if (!inscrit) {
       return res.status(400).send({ message: "NOK" });
     }
-
     await personne.removeTrajet(trajet);
     res.status(200).send({ message: "OK" });
   } catch (error) {
