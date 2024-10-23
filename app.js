@@ -6,6 +6,9 @@ const cors = require("cors");
 const { specs, swaggerUi } = require("./swagger");
 const routes = require("./routes");
 const app = express();
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const corsOptions = {
   origin: "http://localhost:3000",
